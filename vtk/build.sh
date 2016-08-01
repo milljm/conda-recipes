@@ -4,8 +4,8 @@ mkdir build
 cd build
 
 if [ `uname` == Linux ]; then
-    CC=gcc44
-    CXX=g++44
+    CC=gcc
+    CXX=g++
     PY_LIB="libpython${PY_VER}.so"
 
     cmake .. \
@@ -32,16 +32,11 @@ if [ `uname` == Darwin ]; then
     CC=cc
     CXX=c++
     PY_LIB="libpython${PY_VER}.dylib"
-    SDK_PATH="/Developer/SDKs/MacOSX10.6.sdk"
+    MACOSX_DEPLOYMENT_TARGET=10.11
 
     cmake .. \
         -DCMAKE_C_COMPILER=$CC \
         -DCMAKE_CXX_COMPILER=$CXX \
-        -DVTK_REQUIRED_OBJCXX_FLAGS='' \
-        -DVTK_USE_CARBON=OFF \
-        -DVTK_USE_TK=OFF \
-        -DIOKit:FILEPATH=${SDK_PATH}/System/Library/Frameworks/IOKit.framework \
-        -DVTK_USE_COCOA=ON \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_INSTALL_PREFIX="$PREFIX" \
         -DCMAKE_INSTALL_RPATH:STRING="$PREFIX/lib" \
@@ -55,8 +50,10 @@ if [ `uname` == Darwin ]; then
         -DPYTHON_INCLUDE_PATH=${PREFIX}/include/python${PY_VER} \
         -DPYTHON_LIBRARY=${PREFIX}/lib/${PY_LIB} \
         -DVTK_INSTALL_PYTHON_MODULE_DIR=${SP_DIR} \
+        -DVTK_USE_OFFSCREEN=ON \
         -DModule_vtkRenderingMatplotlib=ON \
-        -DVTK_USE_X=OFF
+        -DVTK_USE_X=OFF \
+        -DVTK_USE_COCOA=ON
 fi
 
 make -j${CPU_COUNT}

@@ -3,9 +3,14 @@
 mkdir build
 cd build
 
+set CMAKE_GENERATOR=Visual Studio 9 2008
 set PYLIB=python27.lib
 
-cmake .. -G "NMake Makefiles" ^
+if %ARCH%==64 (
+    set CMAKE_GENERATOR=%CMAKE_GENERATOR% Win64
+)
+
+cmake .. -G "%CMAKE_GENERATOR%" ^
     -Wno-dev ^
     -DCMAKE_BUILD_TYPE=Release ^
     -DCMAKE_INSTALL_PREFIX=%LIBRARY_PREFIX% ^
@@ -22,7 +27,11 @@ cmake .. -G "NMake Makefiles" ^
     -DPYTHON_INCLUDE_PATH=%PREFIX%\\include ^
     -DPYTHON_LIBRARY=%PREFIX%\\libs\\%PYLIB% ^
     -DVTK_INSTALL_PYTHON_MODULE_DIR=%PREFIX%\\Lib\\site-packages ^
+    -DVTK_USE_OFFSCREEN=ON ^
     -DModule_vtkRenderingMatplotlib=ON
 
-cmake --build . --target INSTALL --config Release
+cmake --build . --config Release --target ALL_BUILD 1>output.txt 2>&1
+if errorlevel 1 exit 1
+
+cmake --build . --config Release --target INSTALL
 if errorlevel 1 exit 1

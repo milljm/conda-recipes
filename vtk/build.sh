@@ -52,8 +52,7 @@ if [ `uname` == Darwin ]; then
         -DVTK_INSTALL_PYTHON_MODULE_DIR=${SP_DIR} \
         -DVTK_USE_OFFSCREEN=ON \
         -DModule_vtkRenderingMatplotlib=ON \
-        -DVTK_USE_X=OFF \
-        -DVTK_USE_COCOA=ON
+        -DVTK_USE_X=OFF
 fi
 
 make -j${CPU_COUNT}
